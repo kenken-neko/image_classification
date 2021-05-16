@@ -16,12 +16,12 @@ class SimpleCNNModel:
         is_dropout=True,
     ):
         self._input = Input(shape=[hight_size, width_size, channel_size])
-        self._conv2d = Conv2D(32, kernel_size=(3, 3), activation='relu')
+        self._conv2d = Conv2D(32, kernel_size=(3, 3), activation="relu")
         self._max_pooling = MaxPooling2D(pool_size=(2, 2))
         self._dropout = Dropout(0.25)
         self._flatten = Flatten()
-        self._relu = Dense(128, activation='relu')
-        self._softmax = Dense(num_classes, activation='softmax')
+        self._relu = Dense(128, activation="relu")
+        self._softmax = Dense(num_classes, activation="softmax")
         self._is_dropout = is_dropout
 
     def build(self):
@@ -41,7 +41,7 @@ class VGG16Model:
     def __init__(
         self, 
         num_classes=None,
-        is_fine_tuning=True,
+        is_fine_tuning=False,
     ):
         hight_size, width_size, channel_size = (224, 224, 3)
         self._input = Input(shape=[hight_size, width_size, channel_size])
@@ -67,7 +67,7 @@ class XceptionModel:
     def __init__(
         self, 
         num_classes=None,
-        is_fine_tuning=True,
+        is_fine_tuning=False,
     ):
         hight_size, width_size, channel_size = (299, 299, 3)
         self._input = Input(shape=[hight_size, width_size, channel_size])
