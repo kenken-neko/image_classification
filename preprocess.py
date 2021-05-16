@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 class ImagePreprocess:
 
     def __init__(
@@ -11,10 +12,10 @@ class ImagePreprocess:
         self._num_classes = num_classes
 
     def base_preprocess(self, dataset):
-        images = dataset['image']
+        images = dataset["image"]
         images = tf.cast(images, tf.float32)
         images /= 255.0
-        labels = tf.one_hot(dataset['label'], self._num_classes)
+        labels = tf.one_hot(dataset["label"], self._num_classes)
         return images, labels
 
     def vgg_preprocess(self, dataset):
