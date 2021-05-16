@@ -14,9 +14,9 @@ def main(
     epochs,
     batch_size,
     optimizer,
-    output_model_path,
+    output_model_dir,
 ):
-    # Load dataset
+    # Load train dataset
     train_dataset, info = tfds.load(
         name=dataset_name, 
         split="train", 
@@ -30,34 +30,35 @@ def main(
         channel_size=channel_size,
         num_classes=num_classes,
     )
-
-    # Build models
     if model_type == "SimpleCNN":
+        # Image preprocess
+        train_dataset = train_dataset.map(preprocess.base_preprocess)
+        train_dataset = train_dataset.batch(batch_size)
+        # Build models
         model = SimpleCNNModel(
             hight_size=hight_size,
             width_size=width_size,
             channel_size=channel_size,
             num_classes=num_classes,
         )
-        # Image preprocess
-        train_dataset = train_dataset.map(preprocess.base_preprocess)
-        train_dataset = train_dataset.batch(batch_size)
     elif model_type == "VGG16":
+        # Image preprocess
+        train_dataset = train_dataset.map(preprocess.vgg_preprocess)
+        train_dataset = train_dataset.batch(batch_size)
+        # Build models
         model = VGG16Model(
             num_classes=num_classes,
             is_fine_tuning=is_fine_tuning,
         )
-        # Image preprocess
-        train_dataset = train_dataset.map(preprocess.vgg_preprocess)
-        train_dataset = train_dataset.batch(batch_size)
     elif model_type == "Xception":
+        # Image preprocess
+        train_dataset = train_dataset.map(preprocess.xception_preprocess)
+        train_dataset = train_dataset.batch(batch_size)
+        # Build models
         model = XceptionModel(
             num_classes=num_classes,
             is_fine_tuning=is_fine_tuning,
-        )
-        # Image preprocess
-        train_dataset = train_dataset.map(preprocess.xception_preprocess)
-        train_dataset = train_dataset.batch(batch_size)    
+        ) 
     else:
         raise ValueError(f"The model: {model_type} does not exist.")
 
@@ -68,6 +69,8 @@ def main(
         metrics=["acc"],
     )
 
+    model_file_name = model_type + ".h5"
+    output_model_path = os.path.join(output_model_dir, model_file_name)
     # Preparing callbacks
     callbacks = [
         EarlyStopping(patience=3),
@@ -91,7 +94,7 @@ if __name__ == "__main__":
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--optimizer", type=str, default="adam")
-    parser.add_argument("--output_model_path", type=str, default="models/model.h5")
+    parser.add_argument("--output_model_dir", type=str, default="models")
     args = parser.parse_args()
     main(
         dataset_name=args.dataset_name,
@@ -100,5 +103,5 @@ if __name__ == "__main__":
         epochs=args.epochs,
         batch_size=args.batch_size,
         optimizer=args.optimizer,
-        output_model_path=args.output_model_path,
+        output_model_dir=args.output_model_dir,
     )
