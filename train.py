@@ -4,7 +4,7 @@ import tensorflow_datasets as tfds
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 from models import SimpleCNNModel, VGG16Model, XceptionModel
-from preprocess import ImagePreprocess
+from preprocess import TFImagePreprocess
 
 
 def main(
@@ -26,7 +26,9 @@ def main(
     num_classes = info.features["label"].num_classes
 
     # Image preprocess instance
-    preprocess = ImagePreprocess(
+    preprocess = TFImagePreprocess(
+        hight_size=hight_size, 
+        width_size=width_size,
         channel_size=channel_size,
         num_classes=num_classes,
     )
