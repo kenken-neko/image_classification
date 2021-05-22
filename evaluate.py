@@ -3,7 +3,7 @@ import os
 import tensorflow_datasets as tfds
 from tensorflow.keras.models import load_model
 
-from preprocess import ImagePreprocess
+from preprocess import TFImagePreprocess
 
 
 def main(
@@ -18,11 +18,13 @@ def main(
         split="test", 
         with_info=True,
     )
-    _, _, channel_size = info.features["image"].shape
+    hight_size, width_size, channel_size = info.features["image"].shape
     num_classes = info.features["label"].num_classes
 
     # Image preprocess
-    preprocess = ImagePreprocess(
+    preprocess = TFImagePreprocess(
+        hight_size=hight_size, 
+        width_size=width_size,
         channel_size=channel_size,
         num_classes=num_classes,
     )
