@@ -22,23 +22,25 @@ class TFImagePreprocess:
         return images, labels
 
     def vgg_preprocess(self, dataset):
-        vgg_input_size = [224, 224]
+        # VGG input image size and channel
+        input_size, input_channel = [224, 224], 3
         images, labels = self.base_preprocess(dataset)
-        if self._image_size != vgg_input_size:
+        if self._image_size != input_size:
             images = tf.image.resize(
-                images, vgg_input_size
+                images, input_size
             )
-        if self._channel_size != 3:
+        if self._channel_size != input_channel:
             images = tf.image.grayscale_to_rgb(images)
         return images, labels
 
     def xception_preprocess(self, dataset):
-        xcptn_input_size = [299, 299]
+        # Xception input image size and channel
+        input_size, input_channel = [299, 299], 3
         images, labels = self.base_preprocess(dataset)
-        if self._image_size != xcptn_input_size:
+        if self._image_size != input_size:
             images = tf.image.resize(
-                images, xcptn_input_size
+                images, input_size
             )
-        if self._channel_size != 3:
+        if self._channel_size != input_channel:
             images = tf.image.grayscale_to_rgb(images)
         return images, labels
