@@ -103,7 +103,6 @@ if __name__ == "__main__":
     parser.add_argument("--optimizer", type=str, default="adam")
     parser.add_argument("--output_model_dir", type=str, default="models")
     args = parser.parse_args()
-    print(args.is_augmentation)
     main(
         dataset_name=args.dataset_name,
         is_augmentation=args.is_augmentation,
