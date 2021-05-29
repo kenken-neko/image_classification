@@ -1,47 +1,75 @@
 from tensorflow.keras.models import Model
 from tensorflow.keras import Input
 from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, Dropout, Lambda
+from tensorflow.keras.layers.experimental.preprocessing import RandomFlip, RandomRotation
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.applications.xception import Xception
 
 
 class SimpleCNNModel:
-
+    """ This is a simple CNN model of my own creation.
+        Args:
+            - hight_size      : Input image hight sise
+            - width_size      : Input image width sise
+            - channel_size    : Input image channel sise
+            - num_classes     : Number of classes in the image dataset. 
+                                Used for the softmax parameter.
+            - is_augmentation : Parameter to set whether or not to perform data argumentation.
+    """
     def __init__(
         self, 
         hight_size,
         width_size,
         channel_size,
         num_classes,
-        is_dropout=True,
+        is_dropout=False,
+        is_augmentation=False,
     ):
         self._input = Input(shape=[hight_size, width_size, channel_size])
         self._conv2d = Conv2D(32, kernel_size=(3, 3), activation="relu")
         self._max_pooling = MaxPooling2D(pool_size=(2, 2))
-        self._dropout = Dropout(0.25)
         self._flatten = Flatten()
         self._relu = Dense(128, activation="relu")
         self._softmax = Dense(num_classes, activation="softmax")
-        self._is_dropout = is_dropout
+        # Dropout function
+        self._dropout = None
+        if is_dropout:
+            self._dropout = Dropout(0.25)
+        # Data augmentation functions
+        self._rndflip = None
+        self._rndrot = None
+        if is_augmentation:
+            self._rndflip = RandomFlip("horizontal")
+            self._rndrot = RandomRotation(0.2)
 
     def build(self):
-        input_data = self._input
-        x = self._conv2d(input_data)
+        x = self._input
+        if self._rndflip and self._rndrot:
+            x = self._rndflip(x)
+            x = self._rndrot(x)
+        x = self._conv2d(x)
         x = self._max_pooling(x)
-        if self._is_dropout:
+        if self._dropout:
             x = self._dropout(x)
         x = self._flatten(x)
         x = self._relu(x)
         output_data = self._softmax(x)
-        return Model(inputs=[input_data], outputs=[output_data])
+        return Model(inputs=[self._input], outputs=[output_data])
 
 
 class VGG16Model:
-
+    """ This is a VGG16 model that can use weights pre-trained in ImageNet.
+        Args:
+            - num_classes     : Number of classes in the image dataset. 
+                                Used for the softmax parameter.
+            - is_fine_tuning  : Parameter to set whether or not to perform fine-tuning.
+            - is_augmentation : Parameter to set whether or not to perform data argumentation.
+    """
     def __init__(
         self, 
         num_classes=None,
         is_fine_tuning=False,
+        is_augmentation=False,
     ):
         hight_size, width_size, channel_size = (224, 224, 3)
         self._input = Input(shape=[hight_size, width_size, channel_size])
@@ -53,21 +81,37 @@ class VGG16Model:
             self._base_model = VGG16(weights=None, include_top=False)
         self._flatten = Flatten(input_shape=(hight_size, width_size, channel_size))
         self._softmax = Dense(num_classes, activation="softmax")
+        # Data augmentation functions
+        self._rndflip = None
+        self._rndrot = None
+        if is_augmentation:
+            self._rndflip = RandomFlip("horizontal")
+            self._rndrot = RandomRotation(0.2)
 
     def build(self):
-        input_data = self._input
-        x = self._base_model(input_data)
+        x = self._input
+        if self._rndflip and self._rndrot:
+            x = self._rndflip(x)
+            x = self._rndrot(x)
+        x = self._base_model(x)
         x = self._flatten(x)
         output_data = self._softmax(x)
-        return Model(inputs=[input_data], outputs=[output_data])
+        return Model(inputs=[self._input], outputs=[output_data])
 
 
 class XceptionModel:
-
+    """ This is a Xception V1 model that can use weights pre-trained in ImageNet.
+        Args:
+            - num_classes     : Number of classes in the image dataset. 
+                                Used for the softmax parameter.
+            - is_fine_tuning  : Parameter to set whether or not to perform fine-tuning.
+            - is_augmentation : Parameter to set whether or not to perform data argumentation.
+    """
     def __init__(
         self, 
         num_classes=None,
         is_fine_tuning=False,
+        is_augmentation=False,
     ):
         hight_size, width_size, channel_size = (299, 299, 3)
         self._input = Input(shape=[hight_size, width_size, channel_size])
@@ -79,10 +123,19 @@ class XceptionModel:
             self._base_model = Xception(weights=None, include_top=False)
         self._flatten = Flatten(input_shape=(hight_size, width_size, channel_size))
         self._softmax = Dense(num_classes, activation="softmax")
+        # Data augmentation functions
+        self._rndflip = None
+        self._rndrot = None
+        if is_augmentation:
+            self._rndflip = RandomFlip("horizontal")
+            self._rndrot = RandomRotation(0.2)
 
     def build(self):
-        input_data = self._input
-        x = self._base_model(input_data)
+        x = self._input
+        if self._rndflip and self._rndrot:
+            x = self._rndflip(x)
+            x = self._rndrot(x)
+        x = self._base_model(x)
         x = self._flatten(x)
         output_data = self._softmax(x)
-        return Model(inputs=[input_data], outputs=[output_data])
+        return Model(inputs=[self._input], outputs=[output_data])

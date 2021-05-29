@@ -4,11 +4,12 @@ import tensorflow_datasets as tfds
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 from models import SimpleCNNModel, VGG16Model, XceptionModel
-from preprocess import TFImagePreprocess
+from preprocess import TFImagePreprocessing
 
 
 def main(
     dataset_name,
+    is_augmentation,
     model_type,
     is_fine_tuning,
     epochs,
@@ -26,7 +27,7 @@ def main(
     num_classes = info.features["label"].num_classes
 
     # Image preprocess instance
-    preprocess = TFImagePreprocess(
+    img_prep = TFImagePreprocessing(
         hight_size=hight_size, 
         width_size=width_size,
         channel_size=channel_size,
@@ -34,7 +35,7 @@ def main(
     )
     if model_type == "SimpleCNN":
         # Image preprocess
-        train_dataset = train_dataset.map(preprocess.base_preprocess)
+        train_dataset = train_dataset.map(img_prep.base_preprocess)
         train_dataset = train_dataset.batch(batch_size)
         # Build models
         model = SimpleCNNModel(
@@ -42,24 +43,27 @@ def main(
             width_size=width_size,
             channel_size=channel_size,
             num_classes=num_classes,
+            is_augmentation=is_augmentation,
         )
     elif model_type == "VGG16":
         # Image preprocess
-        train_dataset = train_dataset.map(preprocess.vgg_preprocess)
+        train_dataset = train_dataset.map(img_prep.vgg_preprocess)
         train_dataset = train_dataset.batch(batch_size)
         # Build models
         model = VGG16Model(
             num_classes=num_classes,
             is_fine_tuning=is_fine_tuning,
+            is_augmentation=is_augmentation,
         )
     elif model_type == "Xception":
         # Image preprocess
-        train_dataset = train_dataset.map(preprocess.xception_preprocess)
+        train_dataset = train_dataset.map(img_prep.xception_preprocess)
         train_dataset = train_dataset.batch(batch_size)
         # Build models
         model = XceptionModel(
             num_classes=num_classes,
             is_fine_tuning=is_fine_tuning,
+            is_augmentation=is_augmentation,
         ) 
     else:
         raise ValueError(f"The model: {model_type} does not exist.")
@@ -91,6 +95,7 @@ def main(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parameters for train task")
     parser.add_argument("--dataset_name", type=str, default="mnist")  # Ex.: mnist, fashion_mnist, cifar10
+    parser.add_argument("--is_augmentation", action="store_true")
     parser.add_argument("--model_type", type=str, default="SimpleCNN")
     parser.add_argument("--is_fine_tuning", action="store_true")
     parser.add_argument("--epochs", type=int, default=10)
@@ -100,6 +105,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     main(
         dataset_name=args.dataset_name,
+        is_augmentation=args.is_augmentation,
         model_type=args.model_type,
         is_fine_tuning=args.is_fine_tuning,
         epochs=args.epochs,

@@ -3,7 +3,7 @@ import os
 import tensorflow_datasets as tfds
 from tensorflow.keras.models import load_model
 
-from preprocess import TFImagePreprocess
+from preprocess import TFImagePreprocessing
 
 
 def main(
@@ -22,20 +22,20 @@ def main(
     num_classes = info.features["label"].num_classes
 
     # Image preprocess
-    preprocess = TFImagePreprocess(
+    img_prep = TFImagePreprocessing(
         hight_size=hight_size, 
         width_size=width_size,
         channel_size=channel_size,
         num_classes=num_classes,
     )
     if model_type == "SimpleCNN":
-        test_dataset = test_dataset.map(preprocess.base_preprocess)
+        test_dataset = test_dataset.map(img_prep.base_preprocess)
         test_dataset = test_dataset.batch(batch_size)
     elif model_type == "VGG16":
-        test_dataset = test_dataset.map(preprocess.vgg_preprocess)
+        test_dataset = test_dataset.map(img_prep.vgg_preprocess)
         test_dataset = test_dataset.batch(batch_size)
     elif model_type == "Xception":
-        test_dataset = test_dataset.map(preprocess.xception_preprocess)
+        test_dataset = test_dataset.map(img_prep.xception_preprocess)
         test_dataset = test_dataset.batch(batch_size)
     else:
         raise ValueError(f"The model: {model_type} does not exist.")
