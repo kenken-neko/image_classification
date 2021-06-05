@@ -7,8 +7,9 @@ from tensorflow.keras.applications.xception import Xception
 
 
 class SimpleCNNModel:
-    """ This is a simple CNN model of my own creation.
-        Args:
+    description = """ 
+        This is a simple CNN model of my own creation.
+        Init args:
             - hight_size      : Input image hight sise
             - width_size      : Input image width sise
             - channel_size    : Input image channel sise
@@ -58,8 +59,9 @@ class SimpleCNNModel:
 
 
 class VGG16Model:
-    """ This is a VGG16 model that can use weights pre-trained in ImageNet.
-        Args:
+    description = """ 
+        This is a VGG16 model that can use weights pre-trained in ImageNet.
+        Init args:
             - num_classes     : Number of classes in the image dataset. 
                                 Used for the softmax parameter.
             - is_fine_tuning  : Parameter to set whether or not to perform fine-tuning.
@@ -100,8 +102,9 @@ class VGG16Model:
 
 
 class XceptionModel:
-    """ This is a Xception V1 model that can use weights pre-trained in ImageNet.
-        Args:
+    description = """ 
+        This is a Xception V1 model that can use weights pre-trained in ImageNet.
+        Init args:
             - num_classes     : Number of classes in the image dataset. 
                                 Used for the softmax parameter.
             - is_fine_tuning  : Parameter to set whether or not to perform fine-tuning.
