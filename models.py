@@ -1,6 +1,6 @@
 from tensorflow.keras.models import Model
 from tensorflow.keras import Input
-from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, Dropout, Lambda
+from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from tensorflow.keras.layers.experimental.preprocessing import RandomFlip, RandomRotation
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.applications.xception import Xception
