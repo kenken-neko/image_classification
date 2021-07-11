@@ -9,6 +9,7 @@ from preprocess import TFImagePreprocessing
 
 def main(
     dataset_name,
+    dataset_size,
     augmentation_size,
     augmentation_seed,
     valid_per_train,
@@ -32,6 +33,10 @@ def main(
     )
     hight_size, width_size, channel_size = info.features["image"].shape
     num_classes = info.features["label"].num_classes
+
+    # Train dataset size
+    if dataset_size != -1:
+        train_dataset = train_dataset.shuffle(len(train_dataset)).take(dataset_size)
 
     # Image preprocess instance
     img_prep = TFImagePreprocessing(
@@ -116,6 +121,7 @@ def main(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parameters for train task")
     parser.add_argument("--dataset_name", type=str, default="mnist")  # Ex.: mnist, fashion_mnist, cifar10
+    parser.add_argument("--dataset_size", type=int, default=-1)
     parser.add_argument("--augmentation_size", type=int, default=0)
     parser.add_argument("--augmentation_seed", type=int, default=0)
     parser.add_argument("--valid_per_train", type=float, default=0.2)
@@ -129,6 +135,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     main(
         dataset_name=args.dataset_name,
+        dataset_size=args.dataset_size,
         augmentation_size=args.augmentation_size,
         augmentation_seed=args.augmentation_seed,
         valid_per_train=args.valid_per_train,
