@@ -1,4 +1,5 @@
 import tensorflow as tf
+import random
 
 
 class TFImagePreprocessing:
@@ -13,6 +14,11 @@ class TFImagePreprocessing:
         self._image_size = [hight_size, width_size]
         self._channel_size = channel_size
         self._num_classes = num_classes
+    
+    def rand_augment(self, image, seed=None):
+        image = tf.image.random_flip_left_right(image, seed)
+        image = tf.image.random_brightness(image, 0.25, seed)
+        return image
 
     def base_preprocess(self, dataset):
         image = dataset["image"]
