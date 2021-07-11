@@ -29,15 +29,14 @@ def main(
     )
     if model_type == "SimpleCNN":
         test_dataset = test_dataset.map(img_prep.base_preprocess)
-        test_dataset = test_dataset.batch(1)
     elif model_type == "VGG16":
         test_dataset = test_dataset.map(img_prep.vgg_preprocess)
-        test_dataset = test_dataset.batch(1)
     elif model_type == "Xception":
         test_dataset = test_dataset.map(img_prep.xception_preprocess)
-        test_dataset = test_dataset.batch(1)
     else:
         raise ValueError(f"The model: {model_type} does not exist.")
+    # Batch
+    test_dataset = test_dataset.batch(1)
 
     # Load model
     model_file_name = model_type + ".h5"
