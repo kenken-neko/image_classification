@@ -9,7 +9,8 @@ from preprocess import TFImagePreprocessing
 
 def main(
     dataset_name,
-    is_augmentation,
+    augmentation_size,
+    augmentation_seed,
     valid_per_train,
     model_type,
     is_fine_tuning,
@@ -39,47 +40,53 @@ def main(
         channel_size=channel_size,
         num_classes=num_classes,
     )
+
+    # Preprocess datasets and prepare model
     if model_type == "SimpleCNN":
-        # Image preprocess
+        # Image resizes
         train_dataset = train_dataset.map(img_prep.base_preprocess)
         valid_dataset = valid_dataset.map(img_prep.base_preprocess)
-        train_dataset = train_dataset.batch(batch_size)
-        valid_dataset = valid_dataset.batch(batch_size)
-        # Build models
+        # Prepare model
         model = SimpleCNNModel(
             hight_size=hight_size,
             width_size=width_size,
             channel_size=channel_size,
             num_classes=num_classes,
-            is_augmentation=is_augmentation,
         )
     elif model_type == "VGG16":
-        # Image preprocess
+        # Image resizes
         train_dataset = train_dataset.map(img_prep.vgg_preprocess)
         valid_dataset = valid_dataset.map(img_prep.vgg_preprocess)
-        train_dataset = train_dataset.batch(batch_size)
-        valid_dataset = valid_dataset.batch(batch_size)
-        # Build models
+        # Prepare model
         model = VGG16Model(
             num_classes=num_classes,
             is_fine_tuning=is_fine_tuning,
-            is_augmentation=is_augmentation,
         )
     elif model_type == "Xception":
-        # Image preprocess
+        # Image resizes
         train_dataset = train_dataset.map(img_prep.xception_preprocess)
         valid_dataset = valid_dataset.map(img_prep.xception_preprocess)
-        train_dataset = train_dataset.batch(batch_size)
-        valid_dataset = valid_dataset.batch(batch_size)
-        # Build models
+        # Prepare model
         model = XceptionModel(
             num_classes=num_classes,
             is_fine_tuning=is_fine_tuning,
-            is_augmentation=is_augmentation,
         ) 
     else:
         raise ValueError(f"The model: {model_type} does not exist.")
 
+    # Image augmentation
+    if augmentation_size:
+        train_dataset = train_dataset.repeat(augmentation_size).map(
+            lambda x, y: (img_prep.rand_augment(x, augmentation_seed), y)
+        )
+        valid_dataset = valid_dataset.repeat(augmentation_size).map(
+            lambda x, y: (img_prep.rand_augment(x, augmentation_seed), y)
+        )
+    # Batch
+    train_dataset = train_dataset.batch(batch_size)
+    valid_dataset = valid_dataset.batch(batch_size)
+
+    # Build models
     model = model.build()
     model.compile(
         optimizer=optimizer,
@@ -109,7 +116,8 @@ def main(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parameters for train task")
     parser.add_argument("--dataset_name", type=str, default="mnist")  # Ex.: mnist, fashion_mnist, cifar10
-    parser.add_argument("--is_augmentation", action="store_true")
+    parser.add_argument("--augmentation_size", type=int, default=0)
+    parser.add_argument("--augmentation_seed", type=int, default=0)
     parser.add_argument("--valid_per_train", type=float, default=0.2)
     parser.add_argument("--model_type", type=str, default="SimpleCNN")
     parser.add_argument("--is_fine_tuning", action="store_true")
@@ -121,7 +129,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     main(
         dataset_name=args.dataset_name,
-        is_augmentation=args.is_augmentation,
+        augmentation_size=args.augmentation_size,
+        augmentation_seed=args.augmentation_seed,
         valid_per_train=args.valid_per_train,
         model_type=args.model_type,
         is_fine_tuning=args.is_fine_tuning,
