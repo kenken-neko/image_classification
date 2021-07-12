@@ -1,2 +1,27 @@
-# image_classification
-Experimental code for image classification models
+# Image classification
+This is an experimental script to perform image classification using Tensorflow's Keras and tensorflow_datasets.  
+The following arguments can be used for learning or evaluation.  
+
+# arguments
+train.py  
+| Argument name | Description | Default | Data type |
+| ------------- | ------------- | ------------- | ------------- |
+| dataset_name | Dataset name for tensorflow_datasets. | mnist | str |
+| dataset_size | Number of images in train dataset. If it is set to -1, all train image in tensorflow_datasets will be used. | -1 | int |
+| augmentation_size | Increase the number of image by augmentation_size times by random augmentation. If set to 0, no image augmentation is performed. The augmentation process are horizontal flip and brightness adjustment.| 0 | int |
+| augmentation_seed | Seed value for the random augmentation. | 0 | int |
+| valid_per_train | Ratio of evaluation dataset to train dataset. | 0.2 | float |
+| model_type | Model name for image classification. Specify one of the pre-defined "SimpleCNN", "VGG16", and "Xception". | SimpleCNN | str |
+| is_fine_tuning | Specifies whether or not to perform fine-tuning. Fine-tuning is available only when model VGG16 or Xception is selected. | store_true | bool |
+| epochs | Number of training epochs. | 10 | int |
+| batch_size | Size of training batch. | 32 | int |
+| optimizer | Specify the optimization name in Keras optimizer. | adam | str |
+| output_model_dir |  The name of output directory name for the trained model. | models | str |
+| log_dir | The name of the output directory of the log to be used for tensorboard. | tmp_logs | str |
+
+evaluate.py  
+| Argument name | Description | Default | Data type |
+| ------------- | ------------- | ------------- | ------------- |
+| dataset_name | Dataset name for tensorflow_datasets. | mnist | str |
+| model_type | Model name for image classification. Specify one of the pre-defined "SimpleCNN", "VGG16", and "Xception". | SimpleCNN | str |
+| model_dir |  The name of directory name for the trained model. | models | str |
