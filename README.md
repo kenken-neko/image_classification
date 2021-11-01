@@ -2,7 +2,7 @@
 This is an experimental script to perform image classification using Tensorflow's Keras and tensorflow_datasets.  
 The following arguments can be used for learning or evaluation.  
 
-# arguments
+# Arguments
 train.py  
 | Argument name | Description | Default | Data type |
 | ------------- | ------------- | ------------- | ------------- |
@@ -25,3 +25,14 @@ evaluate.py
 | dataset_name | Dataset name for tensorflow_datasets. | mnist | str |
 | model_type | Model name for image classification. Specify one of the pre-defined "SimpleCNN", "VGG16", and "Xception". | SimpleCNN | str |
 | model_dir |  The name of directory name for the trained model. | models | str |
+
+# Sample docker commands
+```
+docker build . -t imageclass
+docker run \
+  -v $(pwd):/app \
+  -it \
+  --rm \
+  imageclass \
+  /bin/sh -c "python train.py --epochs 5"
+```
