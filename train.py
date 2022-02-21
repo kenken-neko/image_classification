@@ -4,11 +4,13 @@ import tensorflow_datasets as tfds
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 
 from models import SimpleCNNModel, VGG16Model, XceptionModel
+from original_dataset_loader import OriginalDatasetLoader
 from preprocess import TFImagePreprocessing
 
 
 def main(
     dataset_name,
+    original_dataset_path,
     dataset_size,
     augmentation_size,
     augmentation_seed,
@@ -23,16 +25,32 @@ def main(
 ):
     # Load train dataset
     train_ratio = int((1-valid_per_train)*100)
-    (train_dataset, valid_dataset), info = tfds.load(
-        name=dataset_name, 
-        split=[
-            f"train[:{train_ratio}%]",  # Train dataset 
-            f"train[{train_ratio}%:]",  # Valid dataset
-        ], 
-        with_info=True,
-    )
-    hight_size, width_size, channel_size = info.features["image"].shape
-    num_classes = info.features["label"].num_classes
+    if dataset_name:
+        # Load existing dataset from Tensorflow_datasets
+        (train_dataset, valid_dataset), info = tfds.load(
+            name=dataset_name, 
+            split=[
+                f"train[:{train_ratio}%]",  # Train dataset 
+                f"train[{train_ratio}%:]",  # Valid dataset
+            ], 
+            with_info=True,
+        )
+        print(type(train_dataset))
+        hight_size, width_size, channel_size = info.features["image"].shape
+        num_classes = info.features["label"].num_classes
+    elif original_dataset_path:
+        # Load original dataset from directory
+        ds_loader = OriginalDatasetLoader(
+            original_dataset_path,
+            valid_per_train,
+        )
+        train_dataset, valid_dataset = ds_loader.load()
+        hight_size = None
+        width_size = None
+        channel_size = None
+        num_classes = 3
+    else:
+        raise AssertionError("The dataset is not specified correctly.") 
 
     # Train dataset size
     if dataset_size != -1:
@@ -120,7 +138,8 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parameters for train task")
-    parser.add_argument("--dataset_name", type=str, default="mnist")  # Ex.: mnist, fashion_mnist, cifar10
+    parser.add_argument("--dataset_name", type=str, default=None)  # Ex.: mnist, fashion_mnist, cifar10
+    parser.add_argument("--original_dataset_path", type=str, default=None)
     parser.add_argument("--dataset_size", type=int, default=-1)
     parser.add_argument("--augmentation_size", type=int, default=0)
     parser.add_argument("--augmentation_seed", type=int, default=0)
@@ -135,6 +154,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     main(
         dataset_name=args.dataset_name,
+        original_dataset_path=args.original_dataset_path,
         dataset_size=args.dataset_size,
         augmentation_size=args.augmentation_size,
         augmentation_seed=args.augmentation_seed,
