@@ -6,7 +6,8 @@ The following arguments can be used for learning or evaluation.
 train.py  
 | Argument name | Description | Default | Data type |
 | ------------- | ------------- | ------------- | ------------- |
-| dataset_name | Dataset name for tensorflow_datasets. | mnist | str |
+| dataset_name | Dataset name for tensorflow_datasets. | None | str |
+| original_dataset_path | Original dataset path. | None | str |
 | dataset_size | Number of images in train dataset. If it is set to -1, all train image in tensorflow_datasets will be used. | -1 | int |
 | augmentation_size | Increase the number of image by augmentation_size times by random augmentation. If set to 0, no image augmentation is performed. The augmentation process are horizontal flip and brightness adjustment.| 0 | int |
 | augmentation_seed | Seed value for the random augmentation. | 0 | int |
