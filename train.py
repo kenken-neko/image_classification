@@ -35,7 +35,6 @@ def main(
             ], 
             with_info=True,
         )
-        print(type(train_dataset))
         hight_size, width_size, channel_size = info.features["image"].shape
         num_classes = info.features["label"].num_classes
     elif original_dataset_path:
@@ -44,11 +43,11 @@ def main(
             original_dataset_path,
             valid_per_train,
         )
-        train_dataset, valid_dataset = ds_loader.load()
-        hight_size = None
-        width_size = None
-        channel_size = None
-        num_classes = 3
+        (train_dataset, valid_dataset), info = ds_loader.load()
+        hight_size = info["hight_size"]
+        width_size = info["width_size"]
+        channel_size = info["channel_size"]
+        num_classes = info["num_classes"]
     else:
         raise AssertionError("The dataset is not specified correctly.") 
 
