@@ -37,6 +37,3 @@ docker run \
   imageclass \
   /bin/sh -c "python train.py --epochs 5"
 ```
-
-# References
-[TensorFlow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection)
