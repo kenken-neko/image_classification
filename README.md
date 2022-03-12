@@ -37,3 +37,7 @@ docker run \
   imageclass \
   /bin/sh -c "python train.py --epochs 5"
 ```
+
+# References
+- [Image classification by Tensorflow Keres](https://www.tensorflow.org/tutorials/images/classification)
+- [Load images by `tensorflow-dataset`](https://www.tensorflow.org/tutorials/load_data/images)
