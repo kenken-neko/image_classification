@@ -44,9 +44,7 @@ class OriginalDatasetLoader:
             self._preprocess_image,  # Image load
             num_parallel_calls=AUTOTUNE,
         )
-        train_image_ds = image_ds.take(self._num_train_images) 
-        valid_image_ds = image_ds.skip(self._num_train_images)
-        return train_image_ds, valid_image_ds
+        return image_ds
 
     def _load_label_ds(self):
         label_names = sorted(
@@ -62,21 +60,21 @@ class OriginalDatasetLoader:
         label_ds = tf.data.Dataset.from_tensor_slices(
             tf.cast(image_labels, tf.int64)
         )
-        train_label_ds = label_ds.take(self._num_train_images)
-        valid_label_ds = label_ds.skip(self._num_train_images)
 
         # Get number of classes
         image_labels_set = set(image_labels)
         self._info.update({"num_classes": len(image_labels_set)})
-        return train_label_ds, valid_label_ds
+        return label_ds
 
     def load(self):
         # Make image and label datasets
-        train_image_ds, valid_image_ds = self._load_image_ds()
-        train_label_ds, valid_label_ds = self._load_label_ds()
+        image_ds = self._load_image_ds()
+        label_ds = self._load_label_ds()
         # Zip
-        train_dataset = tf.data.Dataset.zip((train_image_ds, train_label_ds))
-        valid_dataset = tf.data.Dataset.zip((valid_image_ds, valid_label_ds))
+        zip_dataset = tf.data.Dataset.zip((image_ds, label_ds))
+        # Split
+        train_dataset = zip_dataset.shuffle(len(zip_dataset)).take(self._num_train_images)
+        valid_dataset = zip_dataset.shuffle(len(zip_dataset)).skip(self._num_train_images)
         # Dict
         train_dataset = train_dataset.map(lambda x, y: {"image": x, "label": y})
         valid_dataset = valid_dataset.map(lambda x, y: {"image": x, "label": y})
