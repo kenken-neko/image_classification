@@ -20,7 +20,7 @@ class OriginalDatasetLoader:
         self._image_paths = [str(path) for path in self._image_paths]
         # Set number of train images
         num_images = len(self._image_paths)
-        self._num_train_images = int(num_images * valid_per_train)
+        self._num_train_images = int(num_images * (1 - valid_per_train))
         # Set channel size
         self._info = {}
         self._info.update({"hight_size": hight_size})
