@@ -3,22 +3,38 @@ import os
 import tensorflow_datasets as tfds
 from tensorflow.keras.models import load_model
 
+from original_dataset_loader import OriginalDatasetLoader
 from preprocess import TFImagePreprocessing
 
 
 def main(
-    dataset_name, 
+    dataset_name,
+    original_dataset_path,
     model_type,
     model_dir,
 ):
     # Load test dataset
-    test_dataset, info = tfds.load(
-        name=dataset_name, 
-        split="test", 
-        with_info=True,
-    )
-    hight_size, width_size, channel_size = info.features["image"].shape
-    num_classes = info.features["label"].num_classes
+    if dataset_name:
+        test_dataset, info = tfds.load(
+            name=dataset_name, 
+            split="test", 
+            with_info=True,
+        )
+        hight_size, width_size, channel_size = info.features["image"].shape
+        num_classes = info.features["label"].num_classes
+    elif original_dataset_path:
+        # Load original dataset from directory
+        ds_loader = OriginalDatasetLoader(
+            original_dataset_path,
+            valid_per_train,
+        )
+        (train_dataset, valid_dataset), info = ds_loader.load()
+        hight_size = info["hight_size"]
+        width_size = info["width_size"]
+        channel_size = info["channel_size"]
+        num_classes = info["num_classes"]
+    else:
+        raise AssertionError("The dataset is not specified correctly.") 
 
     # Image preprocess
     img_prep = TFImagePreprocessing(
@@ -51,11 +67,13 @@ def main(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parameters for evaluate task")
     parser.add_argument("--dataset_name", type=str, default="mnist")  # Ex.: mnist, fashion_mnist, cifar10
+    parser.add_argument("--original_dataset_path", type=str, default=None)
     parser.add_argument("--model_type", type=str, default="SimpleCNN")
     parser.add_argument("--model_dir", default="models")
     args = parser.parse_args()
     main(
         dataset_name=args.dataset_name,
+        original_dataset_path=args.original_dataset_path,
         model_type=args.model_type,
         model_dir=args.model_dir,
     )
