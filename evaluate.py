@@ -26,9 +26,9 @@ def main(
         # Load original dataset from directory
         ds_loader = OriginalDatasetLoader(
             original_dataset_path,
-            valid_per_train,
+            valid_per_train=0,
         )
-        (train_dataset, valid_dataset), info = ds_loader.load()
+        (test_dataset, _), info = ds_loader.load()
         hight_size = info["hight_size"]
         width_size = info["width_size"]
         channel_size = info["channel_size"]
