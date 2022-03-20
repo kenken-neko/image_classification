@@ -25,6 +25,9 @@ evaluate.py
 | ------------- | ------------- | ------------- | ------------- |
 | dataset_name | Dataset name for tensorflow_datasets. | None | str |
 | original_dataset_path | Original dataset path. | None | str |
+| single_image_path | Target single image path. | None | str |
+| single_image_height | Height of target single image. | None | int |
+| single_image_width | Width of target single image. | None | int |
 | model_type | Model name for image classification. Specify one of the pre-defined "SimpleCNN", "VGG16", and "Xception". | SimpleCNN | str |
 | model_dir |  The name of directory name for the trained model. | models | str |
 
