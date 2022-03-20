@@ -23,7 +23,7 @@ train.py
 evaluate.py  
 | Argument name | Description | Default | Data type |
 | ------------- | ------------- | ------------- | ------------- |
-| dataset_name | Dataset name for tensorflow_datasets. | mnist | str |
+| dataset_name | Dataset name for tensorflow_datasets. | None | str |
 | original_dataset_path | Original dataset path. | None | str |
 | model_type | Model name for image classification. Specify one of the pre-defined "SimpleCNN", "VGG16", and "Xception". | SimpleCNN | str |
 | model_dir |  The name of directory name for the trained model. | models | str |
