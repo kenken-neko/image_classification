@@ -66,7 +66,7 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parameters for evaluate task")
-    parser.add_argument("--dataset_name", type=str, default="mnist")  # Ex.: mnist, fashion_mnist, cifar10
+    parser.add_argument("--dataset_name", type=str, default=None)  # Ex.: mnist, fashion_mnist, cifar10
     parser.add_argument("--original_dataset_path", type=str, default=None)
     parser.add_argument("--model_type", type=str, default="SimpleCNN")
     parser.add_argument("--model_dir", default="models")
