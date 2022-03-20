@@ -42,6 +42,9 @@ def main(
         ds_loader = OriginalDatasetLoader(
             original_dataset_path,
             valid_per_train,
+            output_label_dict_path=os.path.join(
+                output_model_dir, f"{model_type}_label_dict.csv"
+            ),
         )
         (train_dataset, valid_dataset), info = ds_loader.load()
         hight_size = info["hight_size"]
