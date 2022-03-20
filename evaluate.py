@@ -26,9 +26,9 @@ def main(
         # Load original dataset from directory
         ds_loader = OriginalDatasetLoader(
             original_dataset_path,
-            valid_per_train,
+            valid_per_train=0,
         )
-        (train_dataset, valid_dataset), info = ds_loader.load()
+        (test_dataset, _), info = ds_loader.load()
         hight_size = info["hight_size"]
         width_size = info["width_size"]
         channel_size = info["channel_size"]
@@ -66,7 +66,7 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parameters for evaluate task")
-    parser.add_argument("--dataset_name", type=str, default="mnist")  # Ex.: mnist, fashion_mnist, cifar10
+    parser.add_argument("--dataset_name", type=str, default=None)  # Ex.: mnist, fashion_mnist, cifar10
     parser.add_argument("--original_dataset_path", type=str, default=None)
     parser.add_argument("--model_type", type=str, default="SimpleCNN")
     parser.add_argument("--model_dir", default="models")
