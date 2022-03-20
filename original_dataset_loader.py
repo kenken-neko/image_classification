@@ -1,3 +1,4 @@
+import csv
 import pathlib
 import tensorflow as tf
 
@@ -12,7 +13,8 @@ class OriginalDatasetLoader:
         valid_per_train,
         hight_size=256,
         width_size=256,
-        channel_size=3
+        channel_size=3,
+        output_label_dict_path="models/label_dict.csv",
     ):
         # Set image paths
         self._data_root = pathlib.Path(dataset_path)
@@ -26,6 +28,8 @@ class OriginalDatasetLoader:
         self._info.update({"hight_size": hight_size})
         self._info.update({"width_size": width_size})
         self._info.update({"channel_size": channel_size})
+        # Set output path
+        self._output_label_dict_path = output_label_dict_path
 
     def _preprocess_image(self, image_path):
         image = tf.io.read_file(image_path)
@@ -60,6 +64,12 @@ class OriginalDatasetLoader:
         label_ds = tf.data.Dataset.from_tensor_slices(
             tf.cast(image_labels, tf.int64)
         )
+
+        # For checking labels on inference results
+        with open(self._output_label_dict_path, "w") as f:  
+            writer = csv.writer(f)
+            for k, v in label_to_index.items():
+                writer.writerow([k, v])
 
         # Get number of classes
         image_labels_set = set(image_labels)
