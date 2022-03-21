@@ -1,6 +1,6 @@
 from tensorflow.keras.models import Model
 from tensorflow.keras import Input
-from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
+from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D, GlobalAveragePooling2D
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.applications.xception import Xception
 
@@ -58,6 +58,7 @@ class VGG16Model:
         self, 
         num_classes=None,
         is_fine_tuning=False,
+        is_dropout=True,
     ):
         hight_size, width_size, channel_size = (224, 224, 3)
         self._input = Input(shape=[hight_size, width_size, channel_size])
@@ -67,15 +68,22 @@ class VGG16Model:
                 layer.trainable = False
         else:
             self._base_model = VGG16(weights=None, include_top=False)
-        self._flatten = Flatten(input_shape=(hight_size, width_size, channel_size))
+        self._average_pooling = GlobalAveragePooling2D()
+        self._relu = Dense(512, activation="relu")
+        self._dropout = None
+        if is_dropout:
+            self._dropout = Dropout(0.25)
         self._softmax = Dense(num_classes, activation="softmax")
 
     def build(self):
         x = self._input
         x = self._base_model(x)
-        x = self._flatten(x)
+        x = self._average_pooling(x)
+        x = self._relu(x)
+        if self._dropout:
+            x = self._dropout(x)
         output_data = self._softmax(x)
-        return Model(inputs=[self._input], outputs=[output_data])
+        return Model(inputs=self._input, outputs=output_data)
 
 
 class XceptionModel:
@@ -90,6 +98,7 @@ class XceptionModel:
         self, 
         num_classes=None,
         is_fine_tuning=False,
+        is_dropout=True,
     ):
         hight_size, width_size, channel_size = (299, 299, 3)
         self._input = Input(shape=[hight_size, width_size, channel_size])
@@ -99,12 +108,19 @@ class XceptionModel:
                 layer.trainable = False
         else:
             self._base_model = Xception(weights=None, include_top=False)
-        self._flatten = Flatten(input_shape=(hight_size, width_size, channel_size))
+        self._average_pooling = GlobalAveragePooling2D()
+        self._relu = Dense(512, activation="relu")
+        self._dropout = None
+        if is_dropout:
+            self._dropout = Dropout(0.25)
         self._softmax = Dense(num_classes, activation="softmax")
 
     def build(self):
         x = self._input
         x = self._base_model(x)
-        x = self._flatten(x)
+        x = self._average_pooling(x)
+        x = self._relu(x)
+        if self._dropout:
+            x = self._dropout(x)
         output_data = self._softmax(x)
-        return Model(inputs=[self._input], outputs=[output_data])
+        return Model(inputs=self._input, outputs=output_data)
