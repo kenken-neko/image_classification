@@ -14,6 +14,7 @@ class SimpleCNNModel:
             - channel_size    : Input image channel sise
             - num_classes     : Number of classes in the image dataset. 
                                 Used for the softmax parameter.
+            - is_dropout      : Whether dropout layer is included or not. 
     """
     def __init__(
         self, 
@@ -53,6 +54,7 @@ class VGG16Model:
             - num_classes     : Number of classes in the image dataset. 
                                 Used for the softmax parameter.
             - is_fine_tuning  : Parameter to set whether or not to perform fine-tuning.
+            - is_dropout      : Whether dropout layer is included or not. 
     """
     def __init__(
         self, 
@@ -93,6 +95,7 @@ class XceptionModel:
             - num_classes     : Number of classes in the image dataset. 
                                 Used for the softmax parameter.
             - is_fine_tuning  : Parameter to set whether or not to perform fine-tuning.
+            - is_dropout      : Whether dropout layer is included or not. 
     """
     def __init__(
         self, 
