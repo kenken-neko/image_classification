@@ -17,6 +17,7 @@ def main(
     valid_per_train,
     model_type,
     is_fine_tuning,
+    is_dropout,
     epochs,
     batch_size,
     optimizer,
@@ -77,6 +78,7 @@ def main(
             width_size=width_size,
             channel_size=channel_size,
             num_classes=num_classes,
+            is_dropout=is_dropout,
         )
     elif model_type == "VGG16":
         # Image resizes
@@ -86,6 +88,7 @@ def main(
         model = VGG16Model(
             num_classes=num_classes,
             is_fine_tuning=is_fine_tuning,
+            is_dropout=is_dropout,
         )
     elif model_type == "Xception":
         # Image resizes
@@ -95,6 +98,7 @@ def main(
         model = XceptionModel(
             num_classes=num_classes,
             is_fine_tuning=is_fine_tuning,
+            is_dropout=is_dropout,
         ) 
     else:
         raise ValueError(f"The model: {model_type} does not exist.")
@@ -148,6 +152,7 @@ if __name__ == "__main__":
     parser.add_argument("--valid_per_train", type=float, default=0.2)
     parser.add_argument("--model_type", type=str, default="SimpleCNN")
     parser.add_argument("--is_fine_tuning", action="store_true")
+    parser.add_argument("--is_dropout", action="store_true")
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--optimizer", type=str, default="adam")
@@ -163,6 +168,7 @@ if __name__ == "__main__":
         valid_per_train=args.valid_per_train,
         model_type=args.model_type,
         is_fine_tuning=args.is_fine_tuning,
+        is_dropout=args.is_dropout,
         epochs=args.epochs,
         batch_size=args.batch_size,
         optimizer=args.optimizer,
