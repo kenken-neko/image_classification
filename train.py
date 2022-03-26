@@ -12,7 +12,7 @@ def main(
     dataset_name,
     original_dataset_path,
     dataset_size,
-    augmentation_size,
+    augmentation_times,
     augmentation_seed,
     valid_per_train,
     model_type,
@@ -104,11 +104,8 @@ def main(
         raise ValueError(f"The model: {model_type} does not exist.")
 
     # Image augmentation
-    if augmentation_size:
-        train_dataset = train_dataset.repeat(augmentation_size).map(
-            lambda x, y: (img_prep.rand_augment(x, augmentation_seed), y)
-        )
-        valid_dataset = valid_dataset.repeat(augmentation_size).map(
+    if augmentation_times:
+        train_dataset = train_dataset.repeat(augmentation_times).map(
             lambda x, y: (img_prep.rand_augment(x, augmentation_seed), y)
         )
     # Batch
@@ -147,7 +144,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset_name", type=str, default=None)  # Ex.: mnist, fashion_mnist, cifar10
     parser.add_argument("--original_dataset_path", type=str, default=None)
     parser.add_argument("--dataset_size", type=int, default=-1)
-    parser.add_argument("--augmentation_size", type=int, default=0)
+    parser.add_argument("--augmentation_times", type=int, default=0)
     parser.add_argument("--augmentation_seed", type=int, default=0)
     parser.add_argument("--valid_per_train", type=float, default=0.2)
     parser.add_argument("--model_type", type=str, default="SimpleCNN")
@@ -163,7 +160,7 @@ if __name__ == "__main__":
         dataset_name=args.dataset_name,
         original_dataset_path=args.original_dataset_path,
         dataset_size=args.dataset_size,
-        augmentation_size=args.augmentation_size,
+        augmentation_times=args.augmentation_times,
         augmentation_seed=args.augmentation_seed,
         valid_per_train=args.valid_per_train,
         model_type=args.model_type,
