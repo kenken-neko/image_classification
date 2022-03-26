@@ -108,9 +108,6 @@ def main(
         train_dataset = train_dataset.repeat(augmentation_times).map(
             lambda x, y: (img_prep.rand_augment(x, augmentation_seed), y)
         )
-        valid_dataset = valid_dataset.repeat(augmentation_times).map(
-            lambda x, y: (img_prep.rand_augment(x, augmentation_seed), y)
-        )
     # Batch
     train_dataset = train_dataset.batch(batch_size)
     valid_dataset = valid_dataset.batch(batch_size)
