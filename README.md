@@ -14,6 +14,7 @@ train.py
 | valid_per_train | Ratio of evaluation dataset to train dataset. | 0.2 | float |
 | model_type | Model name for image classification. Specify one of the pre-defined "SimpleCNN", "VGG16", and "Xception". | SimpleCNN | str |
 | is_fine_tuning | Specifies whether or not to perform fine-tuning. Fine-tuning is available only when model VGG16 or Xception is selected. | store_true | bool |
+| is_dropout | Whether dropout layer is included or not. | store_true | bool |
 | epochs | Number of training epochs. | 10 | int |
 | batch_size | Size of training batch. | 32 | int |
 | optimizer | Specify the optimization name in Keras optimizer. | adam | str |
