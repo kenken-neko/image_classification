@@ -1,6 +1,13 @@
 from tensorflow.keras.models import Model
 from tensorflow.keras import Input
-from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D, GlobalAveragePooling2D
+from tensorflow.keras.layers import (
+    Conv2D,
+    Dense,
+    Dropout,
+    Flatten,
+    MaxPooling2D,
+    GlobalAveragePooling2D,
+)
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.applications.xception import Xception
 
@@ -16,8 +23,9 @@ class SimpleCNNModel:
                                 Used for the softmax parameter.
             - is_dropout      : Whether dropout layer is included or not. 
     """
+
     def __init__(
-        self, 
+        self,
         hight_size,
         width_size,
         channel_size,
@@ -56,8 +64,9 @@ class VGG16Model:
             - is_fine_tuning  : Parameter to set whether or not to perform fine-tuning.
             - is_dropout      : Whether dropout layer is included or not. 
     """
+
     def __init__(
-        self, 
+        self,
         num_classes=None,
         is_fine_tuning=False,
         is_dropout=True,
@@ -97,8 +106,9 @@ class XceptionModel:
             - is_fine_tuning  : Parameter to set whether or not to perform fine-tuning.
             - is_dropout      : Whether dropout layer is included or not. 
     """
+
     def __init__(
-        self, 
+        self,
         num_classes=None,
         is_fine_tuning=False,
         is_dropout=True,
