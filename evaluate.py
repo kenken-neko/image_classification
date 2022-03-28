@@ -24,14 +24,14 @@ def main(
         test_image = load_img(single_image_path)
         test_image = img_to_array(test_image) / 255
         test_image = smart_resize(
-            test_image, 
+            test_image,
             size=(single_image_height, single_image_width),
         )
         test_image = test_image[None, ...]
     elif dataset_name:
         test_dataset, info = tfds.load(
-            name=dataset_name, 
-            split="test", 
+            name=dataset_name,
+            split="test",
             with_info=True,
         )
         hight_size, width_size, channel_size = info.features["image"].shape
@@ -48,7 +48,7 @@ def main(
         channel_size = info["channel_size"]
         num_classes = info["num_classes"]
     else:
-        raise AssertionError("The dataset is not specified correctly.") 
+        raise AssertionError("The dataset is not specified correctly.")
 
     # Load model
     model_file_name = model_type + ".h5"
@@ -73,7 +73,7 @@ def main(
     else:
         # Batch evaluation
         img_prep = TFImagePreprocessing(
-            hight_size=hight_size, 
+            hight_size=hight_size,
             width_size=width_size,
             channel_size=channel_size,
             num_classes=num_classes,
@@ -94,7 +94,9 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parameters for evaluate task")
-    parser.add_argument("--dataset_name", type=str, default=None)  # Ex.: mnist, fashion_mnist, cifar10
+    parser.add_argument(
+        "--dataset_name", type=str, default=None
+    )  # Ex.: mnist, fashion_mnist, cifar10
     parser.add_argument("--original_dataset_path", type=str, default=None)
     parser.add_argument("--single_image_path", type=str, default=None)
     parser.add_argument("--single_image_height", type=int, default=None)

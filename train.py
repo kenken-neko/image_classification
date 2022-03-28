@@ -25,15 +25,15 @@ def main(
     log_dir,
 ):
     # Load train dataset
-    train_ratio = int((1-valid_per_train)*100)
+    train_ratio = int((1 - valid_per_train) * 100)
     if dataset_name:
         # Load existing dataset from Tensorflow_datasets
         (train_dataset, valid_dataset), info = tfds.load(
-            name=dataset_name, 
+            name=dataset_name,
             split=[
-                f"train[:{train_ratio}%]",  # Train dataset 
+                f"train[:{train_ratio}%]",  # Train dataset
                 f"train[{train_ratio}%:]",  # Valid dataset
-            ], 
+            ],
             with_info=True,
         )
         hight_size, width_size, channel_size = info.features["image"].shape
@@ -53,7 +53,7 @@ def main(
         channel_size = info["channel_size"]
         num_classes = info["num_classes"]
     else:
-        raise AssertionError("The dataset is not specified correctly.") 
+        raise AssertionError("The dataset is not specified correctly.")
 
     # Train dataset size
     if dataset_size != -1:
@@ -61,7 +61,7 @@ def main(
 
     # Image preprocess instance
     img_prep = TFImagePreprocessing(
-        hight_size=hight_size, 
+        hight_size=hight_size,
         width_size=width_size,
         channel_size=channel_size,
         num_classes=num_classes,
@@ -99,7 +99,7 @@ def main(
             num_classes=num_classes,
             is_fine_tuning=is_fine_tuning,
             is_dropout=is_dropout,
-        ) 
+        )
     else:
         raise ValueError(f"The model: {model_type} does not exist.")
 
@@ -126,13 +126,13 @@ def main(
     callbacks = [
         TensorBoard(log_dir=log_dir),
         EarlyStopping(patience=3),
-        ModelCheckpoint(output_model_path)
+        ModelCheckpoint(output_model_path),
     ]
 
     # Train the model
     history = model.fit(
         train_dataset,
-        batch_size=batch_size, 
+        batch_size=batch_size,
         epochs=epochs,
         callbacks=callbacks,
         validation_data=valid_dataset,
@@ -141,7 +141,9 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parameters for train task")
-    parser.add_argument("--dataset_name", type=str, default=None)  # Ex.: mnist, fashion_mnist, cifar10
+    parser.add_argument(
+        "--dataset_name", type=str, default=None
+    )  # Ex.: mnist, fashion_mnist, cifar10
     parser.add_argument("--original_dataset_path", type=str, default=None)
     parser.add_argument("--dataset_size", type=int, default=-1)
     parser.add_argument("--augmentation_times", type=int, default=0)
