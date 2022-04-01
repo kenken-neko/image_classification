@@ -57,14 +57,6 @@ def main(
 
     # Evaluation
     if single_image_path:
-        if model_type == "SimpleCNN":
-            target_size = None
-        elif model_type == "VGG16":
-            target_size = (224, 224)
-        elif model_type == "Xception":
-            target_size = (299, 299)
-        else:
-            raise ValueError(f"The model: {model_type} does not exist.")
         pred = model.predict(test_image, batch_size=1, verbose=0)
         pred_label = np.argmax(pred[0])
         score = np.max(pred)
@@ -101,7 +93,6 @@ if __name__ == "__main__":
     parser.add_argument("--single_image_path", type=str, default=None)
     parser.add_argument("--single_image_height", type=int, default=None)
     parser.add_argument("--single_image_width", type=int, default=None)
-    parser.add_argument("--target_size", type=tuple, default=None)
     parser.add_argument("--model_type", type=str, default="SimpleCNN")
     parser.add_argument("--model_dir", default="models")
     args = parser.parse_args()
