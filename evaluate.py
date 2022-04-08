@@ -1,4 +1,5 @@
 import argparse
+import csv
 import os
 import numpy as np
 import tensorflow_datasets as tfds
@@ -55,10 +56,16 @@ def main(
     model_path = os.path.join(model_dir, model_file_name)
     model = load_model(model_path)
 
+    label_dict_file_name = model_type + "_label_dict.csv"
+    label_dict_path_name = os.path.join(model_dir, label_dict_file_name)
+    with open(label_dict_path_name) as file:
+        reader = csv.reader(file)
+        idx2label = {int(idx): label for label, idx in reader}
+
     # Evaluation
     if single_image_path:
         pred = model.predict(test_image, batch_size=1, verbose=0)
-        pred_label = np.argmax(pred[0])
+        pred_label = idx2label[np.argmax(pred[0])]
         score = np.max(pred)
         print(f"Predict label: {pred_label}")
         print(f"score: {score}")
