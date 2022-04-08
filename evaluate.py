@@ -1,4 +1,5 @@
 import argparse
+import csv
 import os
 import numpy as np
 import tensorflow_datasets as tfds
@@ -24,14 +25,14 @@ def main(
         test_image = load_img(single_image_path)
         test_image = img_to_array(test_image) / 255
         test_image = smart_resize(
-            test_image, 
+            test_image,
             size=(single_image_height, single_image_width),
         )
         test_image = test_image[None, ...]
     elif dataset_name:
         test_dataset, info = tfds.load(
-            name=dataset_name, 
-            split="test", 
+            name=dataset_name,
+            split="test",
             with_info=True,
         )
         hight_size, width_size, channel_size = info.features["image"].shape
@@ -48,12 +49,18 @@ def main(
         channel_size = info["channel_size"]
         num_classes = info["num_classes"]
     else:
-        raise AssertionError("The dataset is not specified correctly.") 
+        raise AssertionError("The dataset is not specified correctly.")
 
     # Load model
     model_file_name = model_type + ".h5"
     model_path = os.path.join(model_dir, model_file_name)
     model = load_model(model_path)
+
+    label_dict_file_name = model_type + "_label_dict.csv"
+    label_dict_path_name = os.path.join(model_dir, label_dict_file_name)
+    with open(label_dict_path_name) as file:
+        reader = csv.reader(file)
+        idx2label = {int(idx): label for label, idx in reader}
 
     # Evaluation
     if single_image_path:
@@ -66,14 +73,14 @@ def main(
         else:
             raise ValueError(f"The model: {model_type} does not exist.")
         pred = model.predict(test_image, batch_size=1, verbose=0)
-        pred_label = np.argmax(pred[0])
+        pred_label = idx2label[np.argmax(pred[0])]
         score = np.max(pred)
         print(f"Predict label: {pred_label}")
         print(f"score: {score}")
     else:
         # Batch evaluation
         img_prep = TFImagePreprocessing(
-            hight_size=hight_size, 
+            hight_size=hight_size,
             width_size=width_size,
             channel_size=channel_size,
             num_classes=num_classes,
@@ -94,7 +101,9 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parameters for evaluate task")
-    parser.add_argument("--dataset_name", type=str, default=None)  # Ex.: mnist, fashion_mnist, cifar10
+    parser.add_argument(
+        "--dataset_name", type=str, default=None
+    )  # Ex.: mnist, fashion_mnist, cifar10
     parser.add_argument("--original_dataset_path", type=str, default=None)
     parser.add_argument("--single_image_path", type=str, default=None)
     parser.add_argument("--single_image_height", type=int, default=None)
