@@ -18,8 +18,6 @@ scripts/train.py
 | epochs | Number of training epochs. | 10 | int |
 | batch_size | Size of training batch. | 32 | int |
 | optimizer | Specify the optimization name in Keras optimizer. | adam | str |
-| output_model_dir |  The name of output directory name for the trained model. | models | str |
-| log_dir | The name of the output directory of the log to be used for tensorboard. | tmp_logs | str |
 
 scripts/evaluate.py  
 | Argument name | Description | Default | Data type |
@@ -30,7 +28,6 @@ scripts/evaluate.py
 | single_image_height | Height of target single image. | None | int |
 | single_image_width | Width of target single image. | None | int |
 | model_type | Model name for image classification. Specify one of the pre-defined "SimpleCNN", "VGG16", and "Xception". | SimpleCNN | str |
-| model_dir |  The name of directory name for the trained model. | models | str |
 
 # Sample docker commands
 ```
