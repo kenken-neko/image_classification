@@ -17,8 +17,11 @@ def main(
     single_image_width,
     single_image_path,
     model_type,
-    model_dir,
 ):
+    # Set paths
+    exe_dir = os.path.dirname(os.path.abspath(__file__))
+    model_dir = os.path.join(exe_dir, ".." ,"models")
+
     # Load test dataset
     if single_image_path:
         # Load and preprocess single image
@@ -101,7 +104,6 @@ if __name__ == "__main__":
     parser.add_argument("--single_image_height", type=int, default=None)
     parser.add_argument("--single_image_width", type=int, default=None)
     parser.add_argument("--model_type", type=str, default="SimpleCNN")
-    parser.add_argument("--model_dir", default="models")
     args = parser.parse_args()
     main(
         dataset_name=args.dataset_name,

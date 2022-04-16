@@ -21,9 +21,12 @@ def main(
     epochs,
     batch_size,
     optimizer,
-    output_model_dir,
-    log_dir,
 ):
+    # Set paths
+    exe_dir = os.path.dirname(os.path.abspath(__file__))
+    output_model_dir = os.path.join(exe_dir, ".." ,"models")
+    log_dir = os.path.join(exe_dir, ".." , "tmp_logs")
+
     # Load train dataset
     train_ratio = int((1 - valid_per_train) * 100)
     if dataset_name:
@@ -155,8 +158,6 @@ if __name__ == "__main__":
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--optimizer", type=str, default="adam")
-    parser.add_argument("--output_model_dir", type=str, default="models")
-    parser.add_argument("--log_dir", type=str, default="./tmp_logs/")
     args = parser.parse_args()
     main(
         dataset_name=args.dataset_name,
@@ -171,6 +172,4 @@ if __name__ == "__main__":
         epochs=args.epochs,
         batch_size=args.batch_size,
         optimizer=args.optimizer,
-        output_model_dir=args.output_model_dir,
-        log_dir=args.log_dir,
     )
