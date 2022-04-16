@@ -3,7 +3,7 @@ This is an experimental script to perform image classification using Tensorflow'
 The following arguments can be used for learning or evaluation.  
 
 # Arguments
-train.py  
+scripts/train.py  
 | Argument name | Description | Default | Data type |
 | ------------- | ------------- | ------------- | ------------- |
 | dataset_name | Dataset name for tensorflow_datasets. | None | str |
@@ -21,7 +21,7 @@ train.py
 | output_model_dir |  The name of output directory name for the trained model. | models | str |
 | log_dir | The name of the output directory of the log to be used for tensorboard. | tmp_logs | str |
 
-evaluate.py  
+scripts/evaluate.py  
 | Argument name | Description | Default | Data type |
 | ------------- | ------------- | ------------- | ------------- |
 | dataset_name | Dataset name for tensorflow_datasets. | None | str |
