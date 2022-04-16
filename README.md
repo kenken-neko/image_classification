@@ -40,7 +40,7 @@ docker run \
   -it \
   --rm \
   imageclass \
-  /bin/sh -c "python train.py --epochs 5"
+  /bin/sh -c "python train.py  --dataset_name mnist"
 ```
 
 # References
