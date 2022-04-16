@@ -20,7 +20,7 @@ def main(
 ):
     # Set paths
     exe_dir = os.path.dirname(os.path.abspath(__file__))
-    model_dir = os.path.join(exe_dir, ".." ,"models")
+    model_dir = os.path.join(exe_dir, "..", "models")
 
     # Load test dataset
     if single_image_path:
@@ -59,16 +59,21 @@ def main(
     model_path = os.path.join(model_dir, model_file_name)
     model = load_model(model_path)
 
+    idx2label = None
     label_dict_file_name = model_type + "_label_dict.csv"
     label_dict_path_name = os.path.join(model_dir, label_dict_file_name)
-    with open(label_dict_path_name) as file:
-        reader = csv.reader(file)
-        idx2label = {int(idx): label for label, idx in reader}
+    if os.path.isfile(label_dict_path_name):
+        with open(label_dict_path_name) as file:
+            reader = csv.reader(file)
+            idx2label = {int(idx): label for label, idx in reader}
 
     # Evaluation
     if single_image_path:
         pred = model.predict(test_image, batch_size=1, verbose=0)
-        pred_label = idx2label[np.argmax(pred[0])]
+        if idx2label:
+            pred_label = idx2label[np.argmax(pred[0])]
+        else:
+            pred_label = np.argmax(pred[0])
         score = np.max(pred)
         print(f"Predict label: {pred_label}")
         print(f"score: {score}")
@@ -112,5 +117,4 @@ if __name__ == "__main__":
         single_image_height=args.single_image_height,
         single_image_width=args.single_image_width,
         model_type=args.model_type,
-        model_dir=args.model_dir,
     )
