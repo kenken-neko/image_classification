@@ -8,6 +8,7 @@ authors = []
 python = "^3.8"
 tensorflow = "2.4.1"
 tensorflow-datasets = "4.2.0"
+numpy = "1.19.5"
 
 [tool.poetry.dev-dependencies]
 
