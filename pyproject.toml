@@ -5,10 +5,10 @@ description = ""
 authors = []
 
 [tool.poetry.dependencies]
-python = "^3.8"
-tensorflow = "2.4.1"
-tensorflow-datasets = "4.2.0"
-numpy = "1.19.5"
+python = "^3.12"
+tensorflow = "^2.16.1"
+tensorflow-datasets = "^4.9.6"
+
 
 [tool.poetry.dev-dependencies]
 
